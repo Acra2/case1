@@ -1,14 +1,21 @@
 package app;
 
-import java.util.Calendar;
-import java.util.Date;
+import lombok.*;
+
+import java.time.LocalDate;
 
 /**
  * Created by Sander on 10-10-2016.
  */
+@Builder
+@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class Course {
-    private int id;
-    private String name;
-    private Date startDate;
+    private Integer id;
+    private String title;
+    private String code;
+    private LocalDate startDate;
     private int days;
 }

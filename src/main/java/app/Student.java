@@ -9,7 +9,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class Student {
-    protected int id;
+    protected Integer id;
     protected String name;
     private String bankAccountNr;
+    private String address;
+    private String businessId;
+
+    public Student(Integer id, String name, String address, String bankAccountNr, String businessID) {
+        setId(id);
+        setName(name);
+        setAddress(address);
+        setBankAccountNr(bankAccountNr);
+        setBusinessId(businessID);
+    }
 }
