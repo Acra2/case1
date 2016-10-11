@@ -14,7 +14,7 @@ import javax.ws.rs.core.*;
 @Path("/courses")
 @Produces(MediaType.APPLICATION_JSON)
 public class CourseService {
-    CourseController courseController= new CourseController();
+    CourseController courseController = CourseController.getInstance();
 
     @Context
     UriInfo uriInfo;

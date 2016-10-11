@@ -13,24 +13,31 @@ import java.util.stream.Collectors;
  */
 public class StudentController {
     private IStudentRepo studentRepo;
+    private static StudentController studentController;
 
-    public StudentController(){
+    public static StudentController getInstance() {
+        if (studentController == null)
+            studentController = new StudentController();
+        return studentController;
+    }
+
+    private StudentController() {
         studentRepo = new StudentRepo();
     }
 
-    public List<Student> getAllStudents(){
+    public List<Student> getAllStudents() {
         return studentRepo.getAllStudents();
     }
 
-    public List<SingleStudent> getPrivateStudents(){
+    public List<SingleStudent> getPrivateStudents() {
         return getAllStudents().stream().filter(student -> student instanceof SingleStudent).map(student -> (SingleStudent) student).collect(Collectors.toList());
     }
 
-    public List<SingleStudent> getBusinessStudents(){
+    public List<SingleStudent> getBusinessStudents() {
         return getAllStudents().stream().filter(student -> student.getBusinessId() != null).map(student -> (SingleStudent) student).collect(Collectors.toList());
     }
 
-    public Student getStudent(Integer id){
+    public Student getStudent(Integer id) {
         return studentRepo.getStudent(id);
     }
 }

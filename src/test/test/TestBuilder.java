@@ -1,4 +1,6 @@
 import app.Course;
+import app.SingleStudent;
+import app.Student;
 
 import java.time.LocalDate;
 

@@ -3,6 +3,8 @@ package app;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * Created by Sander on 10-10-2016.
  */
@@ -14,6 +16,7 @@ public abstract class Student {
     private String bankAccountNr;
     private String address;
     private String businessId;
+    private List<CourseRegistration> courseRegistrationList;
 
     public Student(Integer id, String name, String address, String bankAccountNr, String businessID) {
         setId(id);

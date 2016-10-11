@@ -19,7 +19,7 @@ import javax.ws.rs.core.UriInfo;
 public class StudentService {
 
 
-    StudentController studentController= new StudentController();
+    StudentController studentController= StudentController.getInstance();
 
     @Context
     UriInfo uriInfo;
@@ -34,4 +34,6 @@ public class StudentService {
     public Response getStudent(@PathParam("id") Integer id) {
         return Response.ok(studentController.getStudent(id)).build();
     }
+
+
 }

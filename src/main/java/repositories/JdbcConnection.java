@@ -21,20 +21,26 @@ public class JdbcConnection {
         return jdbcConnection;
     }
 
-    public ResultSet getResultSet(String query) throws SQLException {
-        ResultSet resultSet = null;
-        try {
-            Class.forName("oracle.jdbc.OracleDriver");
-            connection = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/XE", "case1", "case1");
-            Statement statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return resultSet;
+    public Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName("oracle.jdbc.OracleDriver");
+        connection = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/XE", "case1", "case1");
+        return connection;
     }
+
+//    public ResultSet getResultSet(String query) throws SQLException {
+//        ResultSet resultSet = null;
+//        try {
+//            Class.forName("oracle.jdbc.OracleDriver");
+//            connection = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/XE", "case1", "case1");
+//            Statement statement = connection.createStatement();
+//            resultSet = statement.executeQuery(query);
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return resultSet;
+//    }
 
 
     public void closeConnection() throws SQLException {

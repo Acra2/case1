@@ -5,6 +5,8 @@ import app.SingleStudent;
 import app.Student;
 import app.StudentFactory;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -22,12 +24,17 @@ public class StudentRepo implements IStudentRepo {
     public List<Student> getAllStudents() {
         List<Student> students = new ArrayList<Student>();
         try {
-            ResultSet resultSet = jdbcConnection.getResultSet("select * from STUDENT");
+            Connection connection = jdbcConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("select * from STUDENT");
+            stmt.executeUpdate();
+            ResultSet resultSet = stmt.getGeneratedKeys();
             while (resultSet.next()) {
                 students.add(resultSetToStudent(resultSet));
             }
             jdbcConnection.closeConnection();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return students;
@@ -36,12 +43,17 @@ public class StudentRepo implements IStudentRepo {
     public Student getStudent(Integer id) {
         Student student = null;
         try {
-            ResultSet resultSet = jdbcConnection.getResultSet("select * from COURSE Where id = " + id.toString());
+            Connection connection = jdbcConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("select * from STUDENT Where id = " + id.toString());
+            stmt.executeUpdate();
+            ResultSet resultSet = stmt.getGeneratedKeys();
             while (resultSet.next()) {
                 student =  resultSetToStudent(resultSet);
             }
             jdbcConnection.closeConnection();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return student;
@@ -54,7 +66,7 @@ public class StudentRepo implements IStudentRepo {
     private Student resultSetToStudent(ResultSet resultSet) {
         try {
             Integer id = resultSet.getInt("id");
-            String name = resultSet.getString("title");
+            String name = resultSet.getString("name");
             String bankAccountNr = resultSet.getString("bankAccountNr");
             String address = resultSet.getString("address");
             Boolean business = resultSet.getString("business").toUpperCase() == "Y";

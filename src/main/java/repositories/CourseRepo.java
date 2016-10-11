@@ -18,12 +18,17 @@ public class CourseRepo implements ICourseRepo {
     public List<Course> getCourses() {
         List<Course> courses = new ArrayList<Course>();
         try {
-            ResultSet resultSet = jdbcConnection.getResultSet("select * from COURSE");
+            Connection connection = jdbcConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("select * from COURSE");
+            stmt.executeUpdate();
+            ResultSet resultSet = stmt.getGeneratedKeys();
             while (resultSet.next()) {
                 courses.add(resultSetToCourse(resultSet));
             }
             jdbcConnection.closeConnection();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return courses;
@@ -32,12 +37,18 @@ public class CourseRepo implements ICourseRepo {
     public Course getCourse(Integer id) {
         Course course = null;
         try {
-            ResultSet resultSet = jdbcConnection.getResultSet("select * from COURSE Where id = "+id.toString());
+            Connection connection = jdbcConnection.getConnection();
+
+            PreparedStatement stmt = connection.prepareStatement("select * from COURSE Where id = "+id.toString());
+            stmt.executeUpdate();
+            ResultSet resultSet = stmt.getGeneratedKeys();
             while (resultSet.next()) {
                 course = resultSetToCourse(resultSet);
             }
             jdbcConnection.closeConnection();
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
         return course;
@@ -47,8 +58,7 @@ public class CourseRepo implements ICourseRepo {
         Integer retValue = 0;
 
         try {
-            Class.forName("oracle.jdbc.OracleDriver");
-            Connection connection = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/XE", "case1", "case1");
+            Connection connection = jdbcConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement("INSERT INTO COURSE (title, code, startdate, days) VALUES (?,?,?,?)", new String[] {"ID"});
             stmt.setString(1,course.getTitle());
             stmt.setString(2, course.getCode());

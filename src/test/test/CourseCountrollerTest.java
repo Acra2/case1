@@ -36,7 +36,7 @@ public class CourseCountrollerTest {
     CourseRepo courseRepo = new CourseRepo();
 
     @InjectMocks
-    CourseController courseController = new CourseController();
+    CourseController courseController = CourseController.getInstance();
 
     @Test
     public void emptyCourseList(){

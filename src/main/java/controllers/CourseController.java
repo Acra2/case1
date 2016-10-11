@@ -18,10 +18,17 @@ import java.util.stream.Collectors;
 public class CourseController {
     private ICourseRepo courseRepo;
 
-    public CourseController() {
+    private static CourseController courseController;
+
+    private CourseController() {
         courseRepo = new CourseRepo();
     }
 
+    public static CourseController getInstance() {
+        if (courseController == null)
+            courseController = new CourseController();
+        return courseController;
+    }
     public List<Course> getCourses() {
         return courseRepo.getCourses();
     }
