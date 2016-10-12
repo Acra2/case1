@@ -39,7 +39,7 @@ public class CourseService {
             builder.path(id.toString());
             return Response.created(builder.build()).build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity(e.getMessage()).build();
         }
     }
 

@@ -11,5 +11,5 @@ import java.util.List;
 public interface IStudentRepo {
     public List<Student> getAllStudents();
     public Student getStudent(Integer id);
-    public void addStudent(Student student);
+    public Integer addStudent(Student student);
 }

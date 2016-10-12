@@ -29,15 +29,11 @@ public class StudentController {
         return studentRepo.getAllStudents();
     }
 
-    public List<SingleStudent> getPrivateStudents() {
-        return getAllStudents().stream().filter(student -> student instanceof SingleStudent).map(student -> (SingleStudent) student).collect(Collectors.toList());
-    }
-
-    public List<SingleStudent> getBusinessStudents() {
-        return getAllStudents().stream().filter(student -> student.getBusinessId() != null).map(student -> (SingleStudent) student).collect(Collectors.toList());
-    }
-
     public Student getStudent(Integer id) {
         return studentRepo.getStudent(id);
+    }
+
+    public Integer addStudent(Student student) {
+        return studentRepo.addStudent(student);
     }
 }

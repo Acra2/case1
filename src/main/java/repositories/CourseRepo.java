@@ -20,8 +20,7 @@ public class CourseRepo implements ICourseRepo {
         try {
             Connection connection = jdbcConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement("select * from COURSE");
-            stmt.executeUpdate();
-            ResultSet resultSet = stmt.getGeneratedKeys();
+            ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 courses.add(resultSetToCourse(resultSet));
             }
@@ -40,8 +39,7 @@ public class CourseRepo implements ICourseRepo {
             Connection connection = jdbcConnection.getConnection();
 
             PreparedStatement stmt = connection.prepareStatement("select * from COURSE Where id = "+id.toString());
-            stmt.executeUpdate();
-            ResultSet resultSet = stmt.getGeneratedKeys();
+            ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 course = resultSetToCourse(resultSet);
             }

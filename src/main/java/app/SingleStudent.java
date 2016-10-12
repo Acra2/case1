@@ -7,7 +7,7 @@ import lombok.Builder;
  */
 public class SingleStudent extends Student {
 
-    public SingleStudent(Integer id, String name,String address, String bankAccountNr, String businessID){
+    public SingleStudent(Integer id, String name,String address, String bankAccountNr, Integer businessID){
         super(id,name,address, bankAccountNr, businessID);
     }
 }

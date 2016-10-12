@@ -22,12 +22,17 @@ public class SubscribeService {
     @POST
     public Response subscribe(@QueryParam("course") Integer courseId,
                           @QueryParam("student") Integer studentId){
+        if (courseId == null)
+            return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Missing query parameter 'course'").build();
+        if (studentId == null)
+            return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity("Missing query parameter 'student'").build();
+
         try {
             subscribeController.subscribe(courseId, studentId);
             return Response.status(200).build();
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).type("text/plain").entity(e.getMessage()).build();
         }
     }
 

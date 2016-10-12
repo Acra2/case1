@@ -13,6 +13,6 @@ public class Business extends Student {
     private List<Student> students;
 
     public Business(Integer id, String name,String address, String bankAccountNr){
-        super(id,name,address, bankAccountNr, null);
+        super(id,name,address, bankAccountNr, 0);
     }
 }

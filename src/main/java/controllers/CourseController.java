@@ -29,6 +29,7 @@ public class CourseController {
             courseController = new CourseController();
         return courseController;
     }
+
     public List<Course> getCourses() {
         return courseRepo.getCourses();
     }

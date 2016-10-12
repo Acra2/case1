@@ -15,10 +15,10 @@ public abstract class Student {
     protected String name;
     private String bankAccountNr;
     private String address;
-    private String businessId;
-    private List<CourseRegistration> courseRegistrationList;
+    private Integer businessId;
+    private List<Course> courseList;
 
-    public Student(Integer id, String name, String address, String bankAccountNr, String businessID) {
+    public Student(Integer id, String name, String address, String bankAccountNr, Integer businessID) {
         setId(id);
         setName(name);
         setAddress(address);

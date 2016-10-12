@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.sql.Date.valueOf;
+
 /**
  * Created by Sander on 10-10-2016.
  */
@@ -27,7 +29,7 @@ public class StudentRepo implements IStudentRepo {
             Connection connection = jdbcConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement("select * from STUDENT");
             stmt.executeUpdate();
-            ResultSet resultSet = stmt.getGeneratedKeys();
+            ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 students.add(resultSetToStudent(resultSet));
             }
@@ -46,7 +48,7 @@ public class StudentRepo implements IStudentRepo {
             Connection connection = jdbcConnection.getConnection();
             PreparedStatement stmt = connection.prepareStatement("select * from STUDENT Where id = " + id.toString());
             stmt.executeUpdate();
-            ResultSet resultSet = stmt.getGeneratedKeys();
+            ResultSet resultSet = stmt.executeQuery();
             while (resultSet.next()) {
                 student =  resultSetToStudent(resultSet);
             }
@@ -59,8 +61,28 @@ public class StudentRepo implements IStudentRepo {
         return student;
     }
 
-    public void addStudent(Student student) {
+    public Integer addStudent(Student student) {
+        Integer retValue = 0;
 
+        try {
+            Connection connection = jdbcConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("INSERT INTO Student (name, bankaccountnr, address, business, studentid) VALUES (?,?,?,?,?)", new String[] {"ID"});
+            stmt.setString(1,student.getName());
+            stmt.setString(2, student.getBankAccountNr());
+            stmt.setString(3, student.getAddress());
+            stmt.setString(4, student instanceof SingleStudent ? "N": "Y");
+            stmt.setInt(4, student.getBusinessId());
+            stmt.executeUpdate();
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next() ) {
+                retValue = rs.getInt(1);
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return retValue;
     }
 
     private Student resultSetToStudent(ResultSet resultSet) {
@@ -70,7 +92,7 @@ public class StudentRepo implements IStudentRepo {
             String bankAccountNr = resultSet.getString("bankAccountNr");
             String address = resultSet.getString("address");
             Boolean business = resultSet.getString("business").toUpperCase() == "Y";
-            String businessid = resultSet.getString("Studentid");
+            Integer businessid = resultSet.getInt("Studentid");
             return studentFactory.createStudent(id, name, address, bankAccountNr,businessid, business);
         } catch (SQLException e) {
             e.printStackTrace();
