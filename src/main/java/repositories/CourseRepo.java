@@ -67,6 +67,7 @@ public class CourseRepo implements ICourseRepo {
             if (rs.next() ) {
                 retValue = rs.getInt(1);
             }
+            jdbcConnection.closeConnection();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (SQLException e) {

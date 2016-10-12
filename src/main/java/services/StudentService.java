@@ -1,8 +1,6 @@
 package services;
 
-import app.Course;
 import app.SingleStudent;
-import app.Student;
 import controllers.StudentController;
 
 import javax.ws.rs.*;

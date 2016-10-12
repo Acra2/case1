@@ -46,4 +46,15 @@ public class SubscribeController {
         }
         return subscriptions;
     }
+
+    public List<Subscription> getSubscriptionsByWeek(Integer weekNr, Integer year) {
+        ArrayList<Subscription> subscriptions = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> allSubscriptionsIds = subscribeRepo.getSubscriptionsByWeek(weekNr, year);
+        for (ArrayList<Integer> ids : allSubscriptionsIds){
+            Course course = courseController.getCourse(ids.get(0));
+            Student student = studentController.getStudent(ids.get(1));
+            subscriptions.add(new Subscription(course,student));
+        }
+        return subscriptions;
+    }
 }

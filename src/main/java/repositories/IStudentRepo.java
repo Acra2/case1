@@ -1,6 +1,5 @@
 package repositories;
 
-import app.SingleStudent;
 import app.Student;
 
 import java.util.List;

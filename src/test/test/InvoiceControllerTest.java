@@ -16,8 +16,6 @@ import repositories.SubscribeRepo;
 
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 import static org.hamcrest.core.Is.is;
@@ -64,7 +62,7 @@ public class InvoiceControllerTest {
         when(studentRepo.getStudent(1)).thenReturn(new SingleStudent(1,"","","",0));
         when(studentRepo.getStudent(2)).thenReturn(new SingleStudent(2,"","","",0));
         when(studentRepo.getStudent(3)).thenReturn(new SingleStudent(3,"","","",0));
-        when(subscribeRepo.getAllSubscriptions()).thenReturn(TestBuilder.subscriptionIds());
+        when(subscribeRepo.getSubscriptionsByWeek(anyInt(),anyInt())).thenReturn(TestBuilder.subscriptionIds());
 
         Invoice invoice = invoiceController.getInvoice(getWeekNr(LocalDate.now()), LocalDate.now().getYear());
         assertThat(invoice.getStudents().size(), is(2));
@@ -81,13 +79,13 @@ public class InvoiceControllerTest {
         when(studentRepo.getStudent(2)).thenReturn(new SingleStudent(2,"businessStudent","","",4));
         when(studentRepo.getStudent(3)).thenReturn(new SingleStudent(3,"businessStudent","","",4));
         when(studentRepo.getStudent(4)).thenReturn(new Business(4,"business","",""));
-        when(subscribeRepo.getAllSubscriptions()).thenReturn(TestBuilder.subscriptionIds());
+        when(subscribeRepo.getSubscriptionsByWeek(anyInt(),anyInt())).thenReturn(TestBuilder.subscriptionIds());
 
         Invoice invoice = invoiceController.getInvoice(getWeekNr(LocalDate.now()), LocalDate.now().getYear());
         assertThat(invoice.getStudents().size(), is(2));
         assertThat(invoice.getStudents().get(0).getId() ,is(1));
         assertThat(invoice.getStudents().get(1).getId() ,is(4));
-        assertThat(invoice.getStudents().get(1).getCourseList().size(), is(1));
+        assertThat(invoice.getStudents().get(1).getCourseList().size(), is(2));
         assertThat(invoice.getStudents().get(1).getCourseList().get(0).getId(), is(1));
     }
 
@@ -95,19 +93,19 @@ public class InvoiceControllerTest {
     public void invoiceTwoBusiness(){
 
         when(courseRepo.getCourse(1)).thenReturn(TestBuilder.course().startDate(LocalDate.now()).build());
-        when(courseRepo.getCourse(2)).thenReturn(TestBuilder.course().startDate(LocalDate.now().plusDays(7)).build());
+        when(courseRepo.getCourse(2)).thenReturn(TestBuilder.course().startDate(LocalDate.now()).build());
         when(studentRepo.getStudent(1)).thenReturn(new SingleStudent(1,"businessStudent1-1","","",3));
         when(studentRepo.getStudent(2)).thenReturn(new SingleStudent(2,"businessStudent1-2","","",3));
         when(studentRepo.getStudent(3)).thenReturn(new Business(3,"business1","",""));
         when(studentRepo.getStudent(4)).thenReturn(new SingleStudent(4,"businessStudent2-1","","",6));
         when(studentRepo.getStudent(5)).thenReturn(new SingleStudent(5,"businessStudent2-2","","",6));
         when(studentRepo.getStudent(6)).thenReturn(new Business(6,"business2","",""));
-        when(subscribeRepo.getAllSubscriptions()).thenReturn(TestBuilder.subscriptionIdsMultipleBusiness());
+        when(subscribeRepo.getSubscriptionsByWeek(anyInt(),anyInt())).thenReturn(TestBuilder.subscriptionIdsMultipleBusiness());
 
         Invoice invoice = invoiceController.getInvoice(getWeekNr(LocalDate.now()), LocalDate.now().getYear());
         assertThat(invoice.getStudents().size(), is(2));
         assertThat(invoice.getStudents().get(0).getId() ,is(3));
-        assertThat(invoice.getStudents().get(0).getCourseList().size(), is(2));
+        assertThat(invoice.getStudents().get(0).getCourseList().size(), is(4));
         assertThat(invoice.getStudents().get(0).getCourseList().get(0).getId(), is(1));
         assertThat(invoice.getStudents().get(0).getCourseList().get(1).getId(), is(1));
     }

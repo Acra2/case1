@@ -1,6 +1,5 @@
 package services;
 
-import app.Invoice;
 import controllers.InvoiceController;
 
 import javax.ws.rs.POST;

@@ -1,10 +1,7 @@
 import app.Course;
-import app.SingleStudent;
-import app.Student;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Sander on 10-10-2016.

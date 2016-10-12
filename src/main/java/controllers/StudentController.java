@@ -1,12 +1,10 @@
 package controllers;
 
-import app.SingleStudent;
 import app.Student;
 import repositories.IStudentRepo;
 import repositories.StudentRepo;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Sander on 10-10-2016.

@@ -1,16 +1,10 @@
 package repositories;
 
-import app.Course;
-import app.Subscription;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Exchanger;
+import java.util.Locale;
 
 import static java.sql.Date.valueOf;
 
@@ -21,6 +15,7 @@ public class SubscribeRepo implements ISubscribeRepo {
 
     JdbcConnection jdbcConnection = JdbcConnection.getInstance();
 
+    WeekFields weekFields = WeekFields.of(Locale.GERMANY);
     public void subscribe(Integer courseId, Integer studentId) throws Exception {
         try {
             Connection connection = jdbcConnection.getConnection();
@@ -52,6 +47,40 @@ public class SubscribeRepo implements ISubscribeRepo {
         }
         return subscriptions;
     }
+
+    public ArrayList<ArrayList<Integer>> getSubscriptionsByWeek(Integer week, Integer year) {
+        ArrayList<ArrayList<Integer>> subscriptions = new ArrayList<ArrayList<Integer>>();
+        try {
+            Connection connection = jdbcConnection.getConnection();
+            PreparedStatement stmt = connection.prepareStatement("SELECT r.COURSEID, r.STUDENTID FROM COURSEREGISTRATION r, Course c WHERE c.id = r.COURSEID AND c.STARTDATE BETWEEN ? AND ?");
+            stmt.setDate(1, valueOf(getStartDateOfWeek(week,year)));
+            stmt.setDate(2, valueOf(getEndDateOfWeek(week,year)));
+            ResultSet resultSet = stmt.executeQuery();
+            while (resultSet.next()) {
+                subscriptions.add(resultSetToSubscription(resultSet));
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return subscriptions;
+    }
+
+    private LocalDate getStartDateOfWeek(Integer week, Integer year){
+        return LocalDate.now()
+                .withYear(year)
+                .with(weekFields.weekOfYear(), week)
+                .with(weekFields.dayOfWeek(), 1);
+    }
+
+    private LocalDate getEndDateOfWeek(Integer week, Integer year){
+        return LocalDate.now()
+                .withYear(year)
+                .with(weekFields.weekOfYear(), week)
+                .with(weekFields.dayOfWeek(), 7);
+    }
+
     private ArrayList<Integer> resultSetToSubscription(ResultSet resultSet) throws SQLException {
         ArrayList<Integer> integers = new ArrayList<>();
         integers.add(resultSet.getInt("COURSEID"));
