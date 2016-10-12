@@ -62,7 +62,7 @@ public class StudentRepo implements IStudentRepo {
     }
 
     public Integer addStudent(Student student) {
-        Integer retValue = 0;
+        Integer retValue =-1;
 
         try {
             Connection connection = jdbcConnection.getConnection();
@@ -71,10 +71,10 @@ public class StudentRepo implements IStudentRepo {
             stmt.setString(2, student.getBankAccountNr());
             stmt.setString(3, student.getAddress());
             stmt.setString(4, student instanceof SingleStudent ? "N": "Y");
-            stmt.setInt(4, student.getBusinessId());
+            stmt.setInt(5, student.getBusinessId());
             stmt.executeUpdate();
             ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next() ) {
+            if (rs.next()) {
                 retValue = rs.getInt(1);
             }
         } catch (ClassNotFoundException e) {

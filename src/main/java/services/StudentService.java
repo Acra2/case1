@@ -1,6 +1,7 @@
 package services;
 
 import app.Course;
+import app.SingleStudent;
 import app.Student;
 import controllers.StudentController;
 
@@ -33,7 +34,7 @@ public class StudentService {
 
     @POST
     @Consumes("application/json")
-    public Response addCourse(Student student) {
+    public Response addStudent(SingleStudent student) {
         try {
             Integer id = studentController.addStudent(student);
             UriBuilder builder = uriInfo.getAbsolutePathBuilder();

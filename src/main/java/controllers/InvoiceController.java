@@ -35,22 +35,23 @@ public class InvoiceController {
 
     public Invoice getInvoice(Integer weekNr, Integer year) {
         Invoice invoice = new Invoice(weekNr);
-        List<Subscription> subscriptions = subscribeController.getSubscriptions();
+        List<Subscription> allSubscriptions = subscribeController.getSubscriptions();
 
-        List<Subscription> AllSubscriptions = subscriptions
+        List<Subscription> weekSubscriptions = allSubscriptions
                 .stream()
                 .filter(Subscription -> weekNr.equals(getWeekNr(Subscription.getCourse().getStartDate())))
                 .filter(Subscription -> year.equals(Subscription.getCourse().getStartDate().getYear()))
                 .collect(Collectors.toList());
 
-        List<Student> students = AllSubscriptions
+        List<Student> students = weekSubscriptions
                 .stream()
                 .map(Subscription -> Subscription.getStudent())
                 .filter(Student -> (Student instanceof SingleStudent &&
                         Student.getBusinessId().equals(0)))
+                .filter(distinctByKey(Student -> Student.getId()))
                 .collect(Collectors.toList());
 
-        List<Student> businesses =AllSubscriptions
+        List<Student> businesses =weekSubscriptions
                 .stream()
                 .map(Subscription -> Subscription.getStudent())
                 .filter(Student -> (Student instanceof SingleStudent &&
@@ -62,7 +63,7 @@ public class InvoiceController {
         students.addAll(businesses);
         for (Student student : students) {
 //            if (student instanceof SingleStudent && student.getBusinessId() == null) {
-                student.setCourseList(AllSubscriptions
+                student.setCourseList(weekSubscriptions
                         .stream()
                         .filter(Subscription -> Subscription.getStudent().getId().equals(student.getId())||
                                 Subscription.getStudent().getBusinessId().equals(student.getId()))
@@ -87,8 +88,7 @@ public class InvoiceController {
 
     private Integer getWeekNr(LocalDate date) {
         WeekFields weekFields = WeekFields.of(Locale.GERMANY);
-        int weeknr = date.get(weekFields.weekOfWeekBasedYear());
-        return weeknr;
+        return date.get(weekFields.weekOfWeekBasedYear());
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {

@@ -57,8 +57,6 @@ public class CourseController {
                 courseBuilder.days(new Integer(getValueCourseSpecification(courseSpecifications, 2).substring(0, 1)));
                 courseBuilder.startDate(LocalDate.parse(getValueCourseSpecification(courseSpecifications, 3), DateTimeFormatter.ofPattern("dd/MM/yyyy")));
                 courses.add(courseBuilder.build());
-            } else {
-                throw new Exception("Input not valid: " + courseText);
             }
         }
         for (Course course : courses) {
@@ -71,14 +69,22 @@ public class CourseController {
         return courseSpecifications[i].substring(courseSpecifications[i].indexOf(": ") + 2);
     }
 
-    private boolean validateCourseText(String[] courseSpecifications) {
-        return (courseSpecifications.length == 4 &&
-                courseSpecifications[0].contains("Titel: ") &&
-                courseSpecifications[1].contains("Cursuscode: ") &&
-                courseSpecifications[2].contains("Duur: ") &&
-                courseSpecifications[2].contains(" dagen")) &&
-                courseSpecifications[3].contains("Startdatum: ") &&
-                getValueCourseSpecification(courseSpecifications, 3).matches("([0-9]{2})/([0-9]{2})/([0-9]{4})");
+    private boolean validateCourseText(String[] courseSpecifications) throws Exception {
+        if (courseSpecifications.length != 4)
+            throw new Exception("Course must have 4 lines");
+        if (!courseSpecifications[0].contains("Titel: "))
+            throw new Exception("Course doesn't have 'Titel' field as first line");
+        if (!courseSpecifications[1].contains("Cursuscode: "))
+            throw new Exception("Course doesn't have 'Cursuscode' field as second line");
+        if (!courseSpecifications[2].contains("Duur: "))
+            throw new Exception("Course doesn't have 'Duur' field as third line");
+        if (!courseSpecifications[2].contains(" dagen"))
+            throw new Exception("'Duur' field is missing value 'dagen'");
+        if (!courseSpecifications[3].contains("Startdatum: "))
+            throw new Exception("Course doesn't have 'Startdatum' field as fourth line");
+        if (!getValueCourseSpecification(courseSpecifications, 3).matches("([0-9]{2})/([0-9]{2})/([0-9]{4})"))
+            throw new Exception("'Startdatum isn't at the correct format'");
+        return true;
     }
 
     private Boolean validateCreatingCourse(Course course) {
